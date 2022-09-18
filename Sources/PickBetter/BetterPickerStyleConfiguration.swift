@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// Configuration payload passed to `BetterPickerStyle.makeView(_:)`
+@MainActor
 public struct BetterPickerStyleConfiguration {
     /// The view output of all the cells combined
     public let listOutput: AnyView

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// A custom implementation of a 'Picker' UI element with less magic than SwiftUI's provided `Picker`
+@MainActor
 public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: BetterPickerSelection,
     ItemContent: View
 {

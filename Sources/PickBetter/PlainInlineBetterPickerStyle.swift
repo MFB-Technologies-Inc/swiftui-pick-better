@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// 'Default' style with an inline list of cells with a trailing checkmark to indicate selection
+@MainActor
 public struct PlainInlineBetterPickerStyle: BetterPickerStyle {
     public init() {
         // Protocol requires initialized instance but this type has no properties

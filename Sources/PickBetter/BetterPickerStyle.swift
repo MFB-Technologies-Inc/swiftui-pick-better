@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// Models the interface a style for `BetterPicker` must conform to
+@MainActor
 public protocol BetterPickerStyle {
     typealias CellConfiguration = BetterPickerStyleListCellConfiguration
     typealias Configuration = BetterPickerStyleConfiguration

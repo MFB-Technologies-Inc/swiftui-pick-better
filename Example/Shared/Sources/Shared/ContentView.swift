@@ -9,6 +9,7 @@
 import PickBetter
 import SwiftUI
 
+@MainActor
 public struct ContentView: View {
     @State private var tab: TabOption = .singleValue
     @State private var isGridStyle: Bool = true

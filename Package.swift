@@ -21,7 +21,10 @@ let package = Package(
     targets: [
         .target(
             name: "PickBetter",
-            dependencies: []
+            dependencies: [],
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-warn-concurrency"])
+            ]
         ),
     ]
 )
