@@ -104,3 +104,5 @@ public struct SingleSelectionWrapper<SelectionValue: Hashable>: BetterPickerSele
         // Required by protocol conformance
     }
 }
+
+extension SingleSelectionWrapper: Sendable where SelectionValue: Sendable {}

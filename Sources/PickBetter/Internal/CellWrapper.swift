@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 struct CellWrapper<Content>: View where Content: View {
     let isSelected: Bool
     let content: Content
