@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 /// Configuration payload passed to `BetterPickerStyle.makeListCell(_:)`
-@MainActor
 public struct BetterPickerStyleListCellConfiguration {
     /// Callback for when the cell is selected
     private let select: () -> Void

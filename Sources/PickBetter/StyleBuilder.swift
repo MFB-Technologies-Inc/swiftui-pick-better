@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 /// `resultBuilder` implementation for `BetterPickerStyle` that enables convenient choosing of a style in logic without causing problems with different types.
-@MainActor
 @resultBuilder
 public enum StyleBuilder {
     public static func buildBlock<Style: BetterPickerStyle>(_ style: Style) -> Style {
@@ -37,7 +36,6 @@ public enum StyleBuilder {
     }
 
     /// Wrapper for conditional application of two styles.
-    @MainActor
     public struct _ConditionalStyle<TrueStyle, FalseStyle>: BetterPickerStyle where TrueStyle: BetterPickerStyle,
         FalseStyle: BetterPickerStyle
     {

@@ -10,7 +10,6 @@ import Foundation
 import PickBetter
 import SwiftUI
 
-@MainActor
 public struct GridBetterPickerStyle: BetterPickerStyle {
     let color: Color
 
