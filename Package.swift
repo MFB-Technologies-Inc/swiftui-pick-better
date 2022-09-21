@@ -1,5 +1,4 @@
-// swift-tools-version:5.4
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:5.5
 
 import PackageDescription
 
@@ -19,12 +18,6 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(
-            name: "PickBetter",
-            dependencies: [],
-            swiftSettings: [
-                .unsafeFlags(["-Xfrontend", "-warn-concurrency"])
-            ]
-        ),
+        .target(name: "PickBetter"),
     ]
 )
