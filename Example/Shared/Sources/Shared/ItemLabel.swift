@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 public struct ItemLabel: View {
     private let itemId: String
 

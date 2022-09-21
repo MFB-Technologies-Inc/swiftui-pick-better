@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Item: Identifiable {
+public struct Item: Identifiable, Sendable {
     public let id: Int
 
     public init(id: Int) {

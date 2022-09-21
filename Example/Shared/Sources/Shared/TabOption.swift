@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TabOption {
+public enum TabOption: Hashable, Sendable {
     case singleValue
     case singleOptionalValue
     case multiValue

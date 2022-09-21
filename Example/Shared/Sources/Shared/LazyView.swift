@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 public struct LazyView<Content>: View where Content: View {
     private let content: () -> Content
 

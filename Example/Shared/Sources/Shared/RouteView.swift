@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 public struct RouterView<Links, Content>: View where Links: View, Content: View {
     @Binding private var selection: AnyHashable
     private let links: (Binding<AnyHashable>) -> Links
@@ -39,6 +40,7 @@ public struct RouterView<Links, Content>: View where Links: View, Content: View 
     }
 }
 
+@MainActor
 public struct RouteView<Route, Label, Destination>: View where Route: Hashable, Label: View, Destination: View {
     private let route: AnyHashable
     @Binding private var selection: AnyHashable
