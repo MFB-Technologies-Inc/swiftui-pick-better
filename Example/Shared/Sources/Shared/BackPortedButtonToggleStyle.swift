@@ -9,7 +9,6 @@
 import Foundation
 import SwiftUI
 
-@MainActor
 public struct BackPortedButtonToggleStyle: ToggleStyle {
     public func makeBody(configuration: Configuration) -> some View {
         Button(
