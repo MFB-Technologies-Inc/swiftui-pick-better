@@ -59,79 +59,200 @@ public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: 
         return styledBody
     }
 
-    private init(items: [ItemTuple], selection: Binding<SelectionBox>) {
+    fileprivate init(items: [ItemTuple], selection: Binding<SelectionBox>) {
         self.items = items
         _selection = selection
     }
 
-    /// Generates the `ItemTuple`'s from a collection of `Identifiable` items
-    /// - Parameters
-    ///     - data: `Data` -- `RandomAccessCollection` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
-    ///     - content: `(Data.Element) -> ItemContent` View builder for a cell
-    /// - Returns
-    ///     - `[ItemTuple]`
-    private static func itemsFromData<Data>(
+    fileprivate static func itemsFromData<Data>(
         _ data: Data,
-        content: @escaping (Data.Element) -> ItemContent
-    ) -> [ItemTuple] where Data: RandomAccessCollection,
-        Data.Element: Identifiable, Data.Element.ID == SelectionValue
-    {
-        data.map { item in (item.id, { content(item) }) }
+        selectionValue: @escaping (Data.Element) -> SelectionValue,
+        content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) -> [ItemTuple] where Data: Sequence {
+        data.map { item in (selectionValue(item), { content(item) }) }
     }
+
+    // MARK: Init with closure to map from Option to Selection
 
     /// Initializer for an array of identifiable elements where there is always one selection (never nil)
     /// - Parameters
-    ///     - data: Data -- `RandomAccessCollection` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - data: Data -- `Sequence`
+    ///     - selectionValue: `@escaping (Data.Element) -> SelectionValue`
+    ///     - selection: `Binding<SelectionValue>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data, UnwrappedSelection>(
+        _ data: Data,
+        selectionValue: @escaping (Data.Element) -> SelectionValue,
+        selection: Binding<SelectionValue>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, SelectionBox == SingleSelectionWrapper<UnwrappedSelection> {
+        let selectionBinding: Binding<SingleSelectionWrapper<SelectionValue>> = Binding(
+            get: { SingleSelectionWrapper(value: selection.wrappedValue) },
+            set: { selection.wrappedValue = $0.value }
+        )
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: selectionValue, content: content),
+            selection: selectionBinding
+        )
+    }
+
+    /// Initializer for an array of identifiable elements where the selection is a single optional value
+    /// - Parameters
+    ///     - data: Data -- `Sequence`
+    ///     - selectionValue: `@escaping (Data.Element) -> SelectionValue`
+    ///     - selection: `Binding<SelectionValue?>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data, WrappedSelectionValue>(
+        _ data: Data,
+        selectionValue: @escaping (Data.Element) -> SelectionValue,
+        selection: Binding<WrappedSelectionValue?>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, SelectionBox == WrappedSelectionValue? {
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: selectionValue, content: content),
+            selection: selection
+        )
+    }
+}
+
+extension BetterPicker where SelectionBox: Sequence {
+    /// Initializer for an array of identifiable elements where multiple selections can be made
+    /// - Parameters
+    ///     - data: Data -- `Sequence`
+    ///     - selectionValue: `@escaping (Data.Element) -> SelectionValue`
+    ///     - selection: `Binding<SelectionBox>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data>(
+        _ data: Data,
+        selectionValue: @escaping (Data.Element) -> SelectionValue,
+        selection: Binding<SelectionBox>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element == SelectionBox.SelectionValue {
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: selectionValue, content: content),
+            selection: selection
+        )
+    }
+}
+
+// MARK: Init where Selection == Option
+
+extension BetterPicker {
+    /// Initializer for an array of identifiable elements where there is always one selection (never nil)
+    /// - Parameters
+    ///     - data: Data -- `Sequence` where  `Data.Element == SelectionValue`
     ///     - selection: `Binding<SelectionValue>`
     ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
     public init<Data, UnwrappedSelection>(
         _ data: Data,
         selection: Binding<SelectionValue>,
-        @ViewBuilder content: @escaping (Data.Element) -> ItemContent
-    ) where Data: RandomAccessCollection, Data.Element: Identifiable, Data.Element.ID == SelectionValue,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element == SelectionValue,
         SelectionBox == SingleSelectionWrapper<UnwrappedSelection>
     {
         let selectionBinding: Binding<SingleSelectionWrapper<SelectionValue>> = Binding(
             get: { SingleSelectionWrapper(value: selection.wrappedValue) },
             set: { selection.wrappedValue = $0.value }
         )
-        self.init(items: Self.itemsFromData(data, content: content), selection: selectionBinding)
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: { $0 }, content: content),
+            selection: selectionBinding
+        )
     }
 
     /// Initializer for an array of identifiable elements where the selection is a single optional value
     /// - Parameters
-    ///     - data: Data -- `RandomAccessCollection` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - data: Data -- `Sequence` where  `Data.Element == SelectionValue`
     ///     - selection: `Binding<SelectionValue?>`
     ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
     public init<Data, WrappedSelectionValue>(
         _ data: Data,
         selection: Binding<WrappedSelectionValue?>,
-        @ViewBuilder content: @escaping (Data.Element) -> ItemContent
-    ) where Data: RandomAccessCollection, Data.Element: Identifiable, Data.Element.ID == WrappedSelectionValue,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element == WrappedSelectionValue,
         SelectionBox == WrappedSelectionValue?
     {
         self.init(
-            items: Self.itemsFromData(data, content: content),
+            items: Self.itemsFromData(data, selectionValue: { $0 }, content: content),
             selection: selection
         )
     }
 }
 
-extension BetterPicker where SelectionBox: Collection {
+extension BetterPicker where SelectionBox: Sequence {
     /// Initializer for an array of identifiable elements where multiple selections can be made
     /// - Parameters
-    ///     - data: Data -- `RandomAccessCollection` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - data: Data -- `Sequence` where  `Data.Element == SelectionValue`
     ///     - selection: `Binding<SelectionBox>`
     ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
     public init<Data>(
         _ data: Data,
         selection: Binding<SelectionBox>,
-        @ViewBuilder content: @escaping (Data.Element) -> ItemContent
-    ) where Data: RandomAccessCollection, Data.Element: Identifiable, SelectionBox.Element == Data.Element.ID,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element == SelectionBox.SelectionValue {
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: { $0 }, content: content),
+            selection: selection
+        )
+    }
+}
+
+// MARK: Init where Option: Identifiable and Selection == Option.ID
+
+extension BetterPicker {
+    /// Initializer for an array of identifiable elements where there is always one selection (never nil)
+    /// - Parameters
+    ///     - data: Data -- `Sequence` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - selection: `Binding<SelectionValue>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data, UnwrappedSelection>(
+        _ data: Data,
+        selection: Binding<SelectionValue>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element: Identifiable, Data.Element.ID == SelectionValue,
+        SelectionBox == SingleSelectionWrapper<UnwrappedSelection>
+    {
+        let selectionBinding: Binding<SingleSelectionWrapper<SelectionValue>> = Binding(
+            get: { SingleSelectionWrapper(value: selection.wrappedValue) },
+            set: { selection.wrappedValue = $0.value }
+        )
+        self.init(items: Self.itemsFromData(data, selectionValue: \.id, content: content), selection: selectionBinding)
+    }
+
+    /// Initializer for an array of identifiable elements where the selection is a single optional value
+    /// - Parameters
+    ///     - data: Data -- `Sequence` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - selection: `Binding<SelectionValue?>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data, WrappedSelectionValue>(
+        _ data: Data,
+        selection: Binding<WrappedSelectionValue?>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element: Identifiable, Data.Element.ID == WrappedSelectionValue,
+        SelectionBox == WrappedSelectionValue?
+    {
+        self.init(
+            items: Self.itemsFromData(data, selectionValue: \.id, content: content),
+            selection: selection
+        )
+    }
+}
+
+extension BetterPicker where SelectionBox: Sequence {
+    /// Initializer for an array of identifiable elements where multiple selections can be made
+    /// - Parameters
+    ///     - data: Data -- `Sequence` where  `Data.Element: Identifiable`, `Data.Element.ID == SelectionValue`
+    ///     - selection: `Binding<SelectionBox>`
+    ///     - content: `(Data.Element) -> ItemContent` -- View builder for a cell
+    public init<Data>(
+        _ data: Data,
+        selection: Binding<SelectionBox>,
+        @ViewBuilder content: @MainActor @escaping (Data.Element) -> ItemContent
+    ) where Data: Sequence, Data.Element: Identifiable, SelectionBox.Element == Data.Element.ID,
         SelectionBox.Element == SelectionBox.SelectionValue
     {
         self.init(
-            items: Self.itemsFromData(data, content: content),
+            items: Self.itemsFromData(data, selectionValue: \.id, content: content),
             selection: selection
         )
     }

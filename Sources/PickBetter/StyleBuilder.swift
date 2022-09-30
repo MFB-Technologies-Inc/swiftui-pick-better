@@ -9,7 +9,8 @@
 import Foundation
 import SwiftUI
 
-/// `resultBuilder` implementation for `BetterPickerStyle` that enables convenient choosing of a style in logic without causing problems with different types.
+/// `resultBuilder` implementation for `BetterPickerStyle` that enables convenient choosing of a style in logic without
+// causing problems with different types.
 @resultBuilder
 public enum StyleBuilder {
     public static func buildBlock<Style: BetterPickerStyle>(_ style: Style) -> Style {
