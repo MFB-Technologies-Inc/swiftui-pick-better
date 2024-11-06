@@ -1,7 +1,7 @@
 // ContentView.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -60,6 +60,7 @@ public struct ContentView: View {
     private var singleSectionNavItem: String { "singleValueSectionNavItem" }
     private var singleOptionalSectionNavItem: String { "singleOptionalValueSectionNavItem" }
     private var multiSectionNavItem: String { "multiValueSectionNavItem" }
+    private var segmentedNavItem: String { "segmentedNavItem" }
 
     // MARK: Content
 
@@ -106,6 +107,22 @@ public struct ContentView: View {
             HStack {
                 Image(systemName: "n.circle")
                 Text("Multi Value")
+            }
+            .font(.title)
+        #endif
+    }
+
+    private func segmentedPicker() -> some View {
+        SegmentedPickerView(items: Array(items.prefix(3)))
+    }
+
+    private var segmentedNavLabel: some View {
+        #if os(iOS)
+            Image(systemName: "s.circle")
+        #elseif os(macOS) || os(tvOS)
+            HStack {
+                Image(systemName: "n.circle")
+                Text("Segmented")
             }
             .font(.title)
         #endif
@@ -162,6 +179,7 @@ public struct ContentView: View {
                     id: singleOptionalSectionNavItem
                 )
                 navigationButton(label: multiValueNavLabel, tag: .multiValue, id: multiSectionNavItem)
+                navigationButton(label: segmentedNavLabel, tag: .segmented, id: segmentedNavItem)
                 Spacer()
             }
             .frame(width: 75)
@@ -174,6 +192,7 @@ public struct ContentView: View {
                     id: singleOptionalSectionNavItem
                 )
                 navigationButton(label: multiValueNavLabel, tag: .multiValue, id: multiSectionNavItem)
+                navigationButton(label: segmentedNavLabel, tag: .segmented, id: segmentedNavItem)
             }
         #elseif os(tvOS)
             TabView {
@@ -202,6 +221,8 @@ public struct ContentView: View {
                 singleOptionalValue()
             case .multiValue:
                 multiValue()
+            case .segmented:
+                segmentedPicker()
             }
             Spacer()
         }

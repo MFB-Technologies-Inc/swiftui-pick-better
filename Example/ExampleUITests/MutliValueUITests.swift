@@ -1,7 +1,7 @@
 // MutliValueUITests.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -13,12 +13,15 @@ import XCTest
     import Example_macOS
 #endif
 
+@MainActor
 final class MultiValueUITests: ExampleUITestCase {
-    override var _sectionNavItem: (() throws -> XCUIElement)? {
+    @MainActor
+    override var _sectionNavItem: (@MainActor () throws -> XCUIElement)? {
         multiValueNavItem
     }
 
-    override var _picker: (() throws -> XCUIElement)? {
+    @MainActor
+    override var _picker: (@MainActor () throws -> XCUIElement)? {
         multiValuePicker
     }
 
@@ -56,14 +59,14 @@ final class MultiValueUITests: ExampleUITestCase {
         XCTAssert(try !buttonOne().isSelected, "'1' is still not selected after being deselected and '0' is deselected")
     }
 
-    func testGridStyleDeselectAndSelectNew() throws {
+    func testGridStyleDeselectAndSelectNew() async throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         try setGridStyle()
 
         try sharedTestSteps()
     }
 
-    func testListStyleDeselectAndSelectNew() throws {
+    func testListStyleDeselectAndSelectNew() async throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         try setListStyle()
 

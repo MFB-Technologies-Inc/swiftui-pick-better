@@ -1,7 +1,7 @@
 // BetterPicker.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -52,6 +52,7 @@ public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: 
             listOutput: AnyView(forEachStyledItems),
             cellCount: items.count,
             selectionCount: selection.count,
+            selectionIndexSet: IndexSet(items.enumerated().filter { selection.contains($1.0) }.map(\.offset)),
             selectionLabels: items.filter { selection.contains($0.0) }.map { AnyView($0.1()) }
         )
         let styledBody = style.makeView(configuration)

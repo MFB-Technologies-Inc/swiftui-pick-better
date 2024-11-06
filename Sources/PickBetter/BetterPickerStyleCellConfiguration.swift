@@ -1,7 +1,7 @@
 // BetterPickerStyleCellConfiguration.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -12,10 +12,10 @@ import SwiftUI
 /// Configuration payload passed to `BetterPickerStyle.makeListCell(_:)`
 public struct BetterPickerStyleListCellConfiguration {
     /// Callback for when the cell is selected
-    private let select: () -> Void
+    public let select: () -> Void
 
     /// Callback for when the cell is deselected
-    private let deselect: () -> Void
+    public let deselect: () -> Void
 
     /// Label for the cell
     public let label: () -> AnyView

@@ -1,7 +1,7 @@
 // BetterPickerStyleConfiguration.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -19,6 +19,9 @@ public struct BetterPickerStyleConfiguration {
 
     /// The number of selections
     public let selectionCount: Int
+
+    /// The indicies of all selected items
+    public let selectionIndexSet: IndexSet
 
     /// The label views for the selected cells
     public let selectionLabels: [AnyView]

@@ -1,7 +1,7 @@
 // SingleValueUITests.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -13,12 +13,15 @@ import XCTest
     import Example_macOS
 #endif
 
+@MainActor
 final class SingleValueUITests: ExampleUITestCase {
-    override var _sectionNavItem: (() throws -> XCUIElement)? {
+    @MainActor
+    override var _sectionNavItem: (@MainActor () throws -> XCUIElement)? {
         singleValueNavItem
     }
 
-    override var _picker: (() throws -> XCUIElement)? {
+    @MainActor
+    override var _picker: (@MainActor () throws -> XCUIElement)? {
         singleValuePicker
     }
 
@@ -67,7 +70,7 @@ final class SingleValueUITests: ExampleUITestCase {
         XCTAssert(try !buttonZero().isSelected, "'0' should no longer be selected after tapping a new item.")
     }
 
-    func testGridStyleDeselectAndSelectNew() throws {
+    func testGridStyleDeselectAndSelectNew() async throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         #if os(tvOS)
             guard try findVertically(gridStyleToggle(), method: .downOnly) else {
@@ -80,7 +83,7 @@ final class SingleValueUITests: ExampleUITestCase {
         try sharedTestSteps()
     }
 
-    func testListStyleDeselectAndSelectNew() throws {
+    func testListStyleDeselectAndSelectNew() async throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         #if os(tvOS)
             guard try findVertically(gridStyleToggle(), method: .downOnly) else {

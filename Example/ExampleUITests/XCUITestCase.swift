@@ -1,13 +1,14 @@
 // XCUITestCase.swift
 // PickBetter
 //
-// Copyright © 2023 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
 import XCTest
 
+@MainActor
 class XCUITestCase: XCTestCase {
     private var _app: XCUIApplication?
 
@@ -30,14 +31,18 @@ class XCUITestCase: XCTestCase {
     }
 
     func elementCompoundOrPredicate(labeled labels: Set<String>) -> NSPredicate {
-        NSCompoundPredicate(orPredicateWithSubpredicates: labels.map(elementPredicate(labeled:)))
+        let subpredicates = labels.map { label in
+            elementPredicate(labeled: label)
+        }
+        return NSCompoundPredicate(orPredicateWithSubpredicates: subpredicates)
     }
 
-    override func setUpWithError() throws {
-        _app = XCUIApplication()
-        continueAfterFailure = false
-
-        try app().launch()
+    override func setUp() async throws {
+        Task { @MainActor in
+            self._app = XCUIApplication()
+            self.continueAfterFailure = false
+            try? self.app().launch()
+        }
     }
 }
 
@@ -53,6 +58,7 @@ class XCUITestCase: XCTestCase {
             )
         }
 
+        @MainActor
         func currentFocus() throws -> XCUIElement {
             try allElements().descendants(matching: .any).element(matching: focusPredicate)
         }
