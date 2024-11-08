@@ -20,6 +20,9 @@ public struct BetterPickerStyleConfiguration {
     /// The number of selections
     public let selectionCount: Int
 
+    /// The indicies of all selected items
+    public let selectionIndexSet: IndexSet
+
     /// The label views for the selected cells
     public let selectionLabels: [AnyView]
 }

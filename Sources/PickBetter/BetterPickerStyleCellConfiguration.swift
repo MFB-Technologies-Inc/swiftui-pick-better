@@ -12,10 +12,10 @@ import SwiftUI
 /// Configuration payload passed to `BetterPickerStyle.makeListCell(_:)`
 public struct BetterPickerStyleListCellConfiguration {
     /// Callback for when the cell is selected
-    private let select: () -> Void
+    public let select: () -> Void
 
     /// Callback for when the cell is deselected
-    private let deselect: () -> Void
+    public let deselect: () -> Void
 
     /// Label for the cell
     public let label: () -> AnyView

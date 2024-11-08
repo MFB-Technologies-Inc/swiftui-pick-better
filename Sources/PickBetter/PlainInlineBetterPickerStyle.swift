@@ -40,7 +40,7 @@ public struct PlainInlineBetterPickerStyle: BetterPickerStyle {
         let id: String
     }
 
-    private var items: [PreviewItem] = ["A", "B", "C"].map { PreviewItem(id: $0) }
+    private let items: [PreviewItem] = ["A", "B", "C"].map { PreviewItem(id: $0) }
 
     private func itemContent(_ item: PreviewItem) -> some View {
         Text(item.id)
