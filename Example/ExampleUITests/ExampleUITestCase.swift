@@ -31,17 +31,17 @@ class ExampleUITestCase: XCUITestCase {
         try XCTUnwrap(_picker)()
     }
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() async throws {
+        try await super.setUp()
 
         #if os(iOS)
             // iPad has a bug where view is blank when starting in portrait
             // Let's rotate it landscape and back to work around that bug.
-            Task { @MainActor in
-                XCUIDevice.shared.orientation = .portrait
-                XCUIDevice.shared.orientation = .landscapeRight
-                XCUIDevice.shared.orientation = .portrait
-            }
+            // Done inline (not in an unawaited Task) so the rotation finishes
+            // before the synchronous test body starts.
+            XCUIDevice.shared.orientation = .portrait
+            XCUIDevice.shared.orientation = .landscapeRight
+            XCUIDevice.shared.orientation = .portrait
         #endif
     }
 

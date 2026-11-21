@@ -38,11 +38,14 @@ class XCUITestCase: XCTestCase {
     }
 
     override func setUp() async throws {
-        Task { @MainActor in
-            self._app = XCUIApplication()
-            self.continueAfterFailure = false
-            try? self.app().launch()
-        }
+        try await super.setUp()
+        // Launch inline rather than in an unawaited Task: test methods are
+        // synchronous, so a Task launched here may not have run (leaving
+        // `_app` nil) by the time the test body starts.
+        let app = XCUIApplication()
+        _app = app
+        continueAfterFailure = false
+        app.launch()
     }
 }
 
