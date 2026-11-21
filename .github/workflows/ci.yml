@@ -35,10 +35,11 @@ jobs:
     environment: default
     steps:
       - uses: actions/checkout@v4
-      - name: Install linters if missing
+      # Installs the swiftformat and swiftlint versions pinned in .mise.toml,
+      # so CI and local runs use the same linter versions.
+      - uses: jdx/mise-action@v5
+      - name: Show linter versions
         run: |
-          command -v swiftformat >/dev/null || brew install swiftformat
-          command -v swiftlint >/dev/null || brew install swiftlint
           swiftformat --version
           swiftlint version
       - name: Format lint

@@ -1,7 +1,7 @@
 // RouteView.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-public struct RouterView<Links, Content>: View where Links: View, Content: View {
+public struct RouterView<Links: View, Content: View>: View {
     @Binding private var selection: AnyHashable
     private let links: (Binding<AnyHashable>) -> Links
     private let content: (Binding<AnyHashable>) -> Content
@@ -39,7 +39,7 @@ public struct RouterView<Links, Content>: View where Links: View, Content: View 
     }
 }
 
-public struct RouteView<Route, Label, Destination>: View where Route: Hashable, Label: View, Destination: View {
+public struct RouteView<Route: Hashable, Label: View, Destination: View>: View {
     private let route: AnyHashable
     @Binding private var selection: AnyHashable
     private let label: () -> Label

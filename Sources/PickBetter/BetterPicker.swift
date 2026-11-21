@@ -1,7 +1,7 @@
 // BetterPicker.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -10,9 +10,7 @@ import Foundation
 import SwiftUI
 
 /// A custom implementation of a 'Picker' UI element with less magic than SwiftUI's provided `Picker`
-public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: BetterPickerSelection,
-    ItemContent: View
-{
+public struct BetterPicker<SelectionBox: BetterPickerSelection, ItemContent: View>: View {
     /// The type used for tracking selection
     public typealias SelectionValue = SelectionBox.SelectionValue
 
@@ -55,8 +53,7 @@ public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: 
             selectionIndexSet: IndexSet(items.enumerated().filter { selection.contains($1.0) }.map(\.offset)),
             selectionLabels: items.filter { selection.contains($0.0) }.map { AnyView($0.1()) }
         )
-        let styledBody = style.makeView(configuration)
-        return styledBody
+        return style.makeView(configuration)
     }
 
     fileprivate init(items: [ItemTuple], selection: Binding<SelectionBox>) {
@@ -64,11 +61,11 @@ public struct BetterPicker<SelectionBox, ItemContent>: View where SelectionBox: 
         _selection = selection
     }
 
-    fileprivate static func itemsFromData<Data>(
+    fileprivate static func itemsFromData<Data: Sequence>(
         _ data: Data,
         selectionValue: @escaping (Data.Element) -> SelectionValue,
         content: @escaping (Data.Element) -> ItemContent
-    ) -> [ItemTuple] where Data: Sequence {
+    ) -> [ItemTuple] {
         data.map { item in (selectionValue(item), { content(item) }) }
     }
 

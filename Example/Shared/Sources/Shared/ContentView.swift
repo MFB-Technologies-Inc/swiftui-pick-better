@@ -1,7 +1,7 @@
 // ContentView.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -56,11 +56,25 @@ public struct ContentView: View {
 
     // MARK: Accessibility Ids
 
-    private var gridStyleToggle: String { "gridStyleToggle" }
-    private var singleSectionNavItem: String { "singleValueSectionNavItem" }
-    private var singleOptionalSectionNavItem: String { "singleOptionalValueSectionNavItem" }
-    private var multiSectionNavItem: String { "multiValueSectionNavItem" }
-    private var segmentedNavItem: String { "segmentedNavItem" }
+    private var gridStyleToggle: String {
+        "gridStyleToggle"
+    }
+
+    private var singleSectionNavItem: String {
+        "singleValueSectionNavItem"
+    }
+
+    private var singleOptionalSectionNavItem: String {
+        "singleOptionalValueSectionNavItem"
+    }
+
+    private var multiSectionNavItem: String {
+        "multiValueSectionNavItem"
+    }
+
+    private var segmentedNavItem: String {
+        "segmentedNavItem"
+    }
 
     // MARK: Content
 
@@ -128,7 +142,7 @@ public struct ContentView: View {
         #endif
     }
 
-    private func navigationButton<Label>(label: Label, tag: TabOption, id: String) -> some View where Label: View {
+    private func navigationButton<Label: View>(label: Label, tag: TabOption, id: String) -> some View {
         accessibleNavigation(tag: tag, id: id) {
             #if os(iOS)
                 Toggle(
@@ -157,11 +171,11 @@ public struct ContentView: View {
         }
     }
 
-    private func accessibleNavigation<Content>(
+    private func accessibleNavigation<Content: View>(
         tag: TabOption,
         id: String,
         @ViewBuilder _ content: @escaping () -> Content
-    ) -> some View where Content: View {
+    ) -> some View {
         content()
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(sectionOptionAccessibilityTraitsToAdd(isSelected: tab == tag))
@@ -212,20 +226,19 @@ public struct ContentView: View {
         #endif
     }
 
+    @ViewBuilder
     private func mainBody() -> some View {
-        Group {
-            switch tab {
-            case .singleValue:
-                singleValue()
-            case .singleOptionalValue:
-                singleOptionalValue()
-            case .multiValue:
-                multiValue()
-            case .segmented:
-                segmentedPicker()
-            }
-            Spacer()
+        switch tab {
+        case .singleValue:
+            singleValue()
+        case .singleOptionalValue:
+            singleOptionalValue()
+        case .multiValue:
+            multiValue()
+        case .segmented:
+            segmentedPicker()
         }
+        Spacer()
     }
 
     // MARK: Accessibility Traits

@@ -1,7 +1,7 @@
 // SingleOptionalValueSelection.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -31,7 +31,9 @@ public struct SingleOptionalValueSelection: View {
 
     // MARK: Accessiblity Ids
 
-    private var singleOptionalValuePicker: String { "singleOptionalValuePicker" }
+    private var singleOptionalValuePicker: String {
+        "singleOptionalValuePicker"
+    }
 
     public var body: some View {
         LazyView(

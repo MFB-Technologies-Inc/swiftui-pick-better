@@ -1,7 +1,7 @@
 // SingleOptionalValueTests.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -57,14 +57,14 @@ final class SingleOptionalValueUITests: ExampleUITestCase {
         XCTAssert(try buttonOne().isSelected, "'1' should be selected after it is tapped.")
     }
 
-    func testGridStyleDeselectAndSelectNew() async throws {
+    func testGridStyleDeselectAndSelectNew() throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         try setGridStyle()
 
         try sharedTestSteps()
     }
 
-    func testListStyleDeselectAndSelectNew() async throws {
+    func testListStyleDeselectAndSelectNew() throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         try setListStyle()
 

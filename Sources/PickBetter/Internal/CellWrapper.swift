@@ -1,7 +1,7 @@
 // CellWrapper.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct CellWrapper<Content>: View where Content: View {
+struct CellWrapper<Content: View>: View {
     let isSelected: Bool
     let content: Content
 
