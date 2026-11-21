@@ -1,7 +1,7 @@
 // ItemLabel.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -22,9 +22,9 @@ public struct ItemLabel: View {
 
     private var font: Font {
         #if os(macOS)
-            return Font.body
+            Font.body
         #else
-            return Font.largeTitle
+            Font.largeTitle
         #endif
     }
 }

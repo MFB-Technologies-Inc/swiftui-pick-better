@@ -1,7 +1,7 @@
 // BetterPickerSelection.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -94,7 +94,9 @@ public struct SingleSelectionWrapper<SelectionValue: Hashable>: BetterPickerSele
         value == item
     }
 
-    public var count: Int { 1 }
+    public var count: Int {
+        1
+    }
 
     public mutating func didSelect(_ item: SelectionValue) {
         value = item

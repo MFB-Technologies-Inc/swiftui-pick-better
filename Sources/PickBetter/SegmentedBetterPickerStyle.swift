@@ -1,7 +1,7 @@
 // SegmentedBetterPickerStyle.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -34,14 +34,14 @@ public struct SegmentedBetterPickerStyle: BetterPickerStyle {
 
     /// Builds the overall picker ``View``.
     public func makeView(_ configuration: Configuration) -> some View {
-        /// Full width of the `View` for a cell.
+        // Full width of the `View` for a cell.
         let cellWidth = (frameWidth / CGFloat(configuration.cellCount)) - 1.5
-        /// Index of the selected cell.
+        // Index of the selected cell.
         let selectCellIndex = configuration.selectionIndexSet.first
 
         ZStack(alignment: .leading) {
             if let selectCellIndex = selectCellIndex {
-                /// Rounded background to display selected item
+                // Rounded background to display selected item
                 RoundedRectangle(cornerRadius: 6)
                     .fill(.white)
                     .frame(width: cellWidth, height: frameHeight - (cellSelectionPadding * 2))

@@ -1,7 +1,7 @@
 // SegmentedUITests.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -24,7 +24,7 @@ final class SegmentedUITests: ExampleUITestCase {
         segmentedPicker
     }
 
-    func testSelectSegmentedPickerItems() async throws {
+    func testSelectSegmentedPickerItems() throws {
         _ = try sectionNavItem().waitForExistence(timeout: 1)
         XCTAssert(try sectionNavItem().exists, "Navigation link/tab for 'Segmented' picker must exist")
         try sectionNavItem().trigger()

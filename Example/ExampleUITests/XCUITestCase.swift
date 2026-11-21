@@ -1,7 +1,7 @@
 // XCUITestCase.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -38,11 +38,14 @@ class XCUITestCase: XCTestCase {
     }
 
     override func setUp() async throws {
-        Task { @MainActor in
-            self._app = XCUIApplication()
-            self.continueAfterFailure = false
-            try? self.app().launch()
-        }
+        try await super.setUp()
+        // Launch inline rather than in an unawaited Task: test methods are
+        // synchronous, so a Task launched here may not have run (leaving
+        // `_app` nil) by the time the test body starts.
+        let app = XCUIApplication()
+        _app = app
+        continueAfterFailure = false
+        app.launch()
     }
 }
 

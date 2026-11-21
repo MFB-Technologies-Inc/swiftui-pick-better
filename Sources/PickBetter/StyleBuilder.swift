@@ -1,7 +1,7 @@
 // StyleBuilder.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -21,25 +21,22 @@ public enum StyleBuilder {
         style
     }
 
-    public static func buildEither<TrueStyle, FalseStyle>(first: TrueStyle) -> _ConditionalStyle<TrueStyle, FalseStyle>
-        where TrueStyle: BetterPickerStyle, FalseStyle: BetterPickerStyle
-    {
+    public static func buildEither<
+        TrueStyle: BetterPickerStyle,
+        FalseStyle: BetterPickerStyle
+    >(first: TrueStyle) -> _ConditionalStyle<TrueStyle, FalseStyle> {
         _ConditionalStyle(trueStyle: first)
     }
 
     public static func buildEither<
-        TrueStyle,
-        FalseStyle
-    >(second: FalseStyle) -> _ConditionalStyle<TrueStyle, FalseStyle> where TrueStyle: BetterPickerStyle,
+        TrueStyle: BetterPickerStyle,
         FalseStyle: BetterPickerStyle
-    {
+    >(second: FalseStyle) -> _ConditionalStyle<TrueStyle, FalseStyle> {
         _ConditionalStyle(falseStyle: second)
     }
 
     /// Wrapper for conditional application of two styles.
-    public struct _ConditionalStyle<TrueStyle, FalseStyle>: BetterPickerStyle where TrueStyle: BetterPickerStyle,
-        FalseStyle: BetterPickerStyle
-    {
+    public struct _ConditionalStyle<TrueStyle: BetterPickerStyle, FalseStyle: BetterPickerStyle>: BetterPickerStyle {
         private let _trueStyle: TrueStyle?
         private let _falseStyle: FalseStyle?
 

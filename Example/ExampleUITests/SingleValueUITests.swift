@@ -1,7 +1,7 @@
 // SingleValueUITests.swift
 // PickBetter
 //
-// Copyright © 2024 MFB Technologies, Inc. All rights reserved. All rights reserved.
+// Copyright © 2026 MFB Technologies, Inc. All rights reserved. All rights reserved.
 //
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -70,7 +70,7 @@ final class SingleValueUITests: ExampleUITestCase {
         XCTAssert(try !buttonZero().isSelected, "'0' should no longer be selected after tapping a new item.")
     }
 
-    func testGridStyleDeselectAndSelectNew() async throws {
+    func testGridStyleDeselectAndSelectNew() throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         #if os(tvOS)
             guard try findVertically(gridStyleToggle(), method: .downOnly) else {
@@ -83,7 +83,7 @@ final class SingleValueUITests: ExampleUITestCase {
         try sharedTestSteps()
     }
 
-    func testListStyleDeselectAndSelectNew() async throws {
+    func testListStyleDeselectAndSelectNew() throws {
         _ = try gridStyleToggle().waitForExistence(timeout: 1)
         #if os(tvOS)
             guard try findVertically(gridStyleToggle(), method: .downOnly) else {

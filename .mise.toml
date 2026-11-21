@@ -1,0 +1,7 @@
+[tools]
+swiftformat = "0.64.7"
+swiftlint = "0.65.1"
+
+[tool_alias]
+swiftformat = 'asdf:https://github.com/MFB-Technologies-Inc/asdf-swiftformat'
+swiftlint = 'asdf:https://github.com/MFB-Technologies-Inc/asdf-swiftlint'
