@@ -9,38 +9,66 @@ on:
       - '*'
   workflow_dispatch:
 
+# Runner, Xcode, and simulator are all resolved at run time so this file does
+# not need edits when GitHub rotates its hosted macOS images:
+# - `macos-latest` follows GitHub's newest generally available macOS image.
+# - The image's default Xcode is used (no hardcoded Xcode path).
+# - An iPhone simulator on the newest installed iOS runtime is looked up at
+#   run time, so no device name is hardcoded.
+#
+# iOS coverage to expect:
+# - UI tests run on exactly one iOS version: the newest iOS simulator runtime
+#   installed on the current `macos-latest` image. As of 2026-11-20 that image
+#   is macOS 26 with Xcode 26.6, and the newest runtime it lists is iOS 26.5.
+# - That version moves forward on its own whenever GitHub updates the image.
+# - The package supports iOS 15 and later (Package.swift), but iOS 15 through
+#   the version before the newest runtime is not tested here. Older runtimes
+#   are not preinstalled on hosted images, and downloading them is slow.
+# - Only iOS is tested. The Example project's macOS and tvOS targets, and the
+#   package's watchOS support, are not built or tested by this workflow.
+# - The Swift toolchain is the one bundled with the default Xcode, so CI also
+#   does not cover the older tools versions Package.swift declares (5.5, 5.8).
+
 jobs:
   lint:
-    runs-on: macos-13
+    runs-on: macos-latest
     environment: default
     steps:
       - uses: actions/checkout@v4
+      - name: Install linters if missing
+        run: |
+          command -v swiftformat >/dev/null || brew install swiftformat
+          command -v swiftlint >/dev/null || brew install swiftlint
+          swiftformat --version
+          swiftlint version
       - name: Format lint
         run: swiftformat --lint .
       - name: Lint
         run: swiftlint .
   ui-tests:
-    strategy:
-      matrix:
-        include:
-          - os: macos-12
-            xcode: 13.2.1 # Swift 5.5.2
-            sim: iPhone 13
-          - os: macos-12
-            xcode: 13.4.1 # Swift 5.6
-            sim: iPhone 13
-          - os: macos-13
-            xcode: 14.3.1 # Swift 5.8
-            sim: iPhone 14
-          - os: macos-13
-            xcode: '15.0' # Swift 5.9
-            sim: iPhone 15
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Select Xcode ${{ matrix.xcode }}
-        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
-      - name: Boot simulator
-        run: xcrun simctl boot '${{ matrix.sim }}'
+      - name: Show Xcode version
+        run: xcodebuild -version
       - name: Run tests
-        run: xcodebuild -project ./Example/Example.xcodeproj -scheme Example test -destination platform='iOS Simulator',name='${{ matrix.sim }}' -quiet -enableCodeCoverage YES -derivedDataPath "./output"
+        # xcodebuild cannot pick a simulator by itself: `test` needs a concrete
+        # device, and `platform=iOS Simulator,OS=latest` without a name fails.
+        # Same approach as `tuist test`: read simctl's JSON, sort by iOS runtime
+        # version, and take an iPhone on the newest runtime that has one.
+        run: |
+          udid=$(xcrun simctl list devices available -j | jq -r '
+            .devices
+            | to_entries
+            | map(select(.key | test("SimRuntime\\.iOS-")))
+            | map((.key | capture("iOS-(?<v>[0-9-]+)$").v | split("-") | map(tonumber)) as $os
+                | .value[] | select(.name | startswith("iPhone")) | {udid, os: $os})
+            | sort_by(.os)
+            | last
+            | .udid // empty')
+          if [ -z "$udid" ]; then
+            echo "::error::No available iPhone simulator found"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          xcodebuild -project ./Example/Example.xcodeproj -scheme Example test -destination "platform=iOS Simulator,id=$udid" -quiet -enableCodeCoverage YES -derivedDataPath "./output"
